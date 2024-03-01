@@ -15,6 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use('/', (req,ress)=>{
+    res.json({message: "HEllo"})
+});
 app.use('/api/user', userRouter);
 app.use('/api/email', emailRouter);
 
