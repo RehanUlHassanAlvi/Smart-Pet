@@ -31,7 +31,7 @@ function sendEmail(mailObj) {
 
     toEmail="";
   if (mailObj.to === 'formStep1'){
-    toEmail="ralvi7007@gmail.com"
+    toEmail="cryptoanalysis45@gmail.com"
   }
 
   const mailOptions = {
