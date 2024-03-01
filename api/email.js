@@ -20,7 +20,7 @@ router.post('/',async(req,res)=> {
 
 
 
-function sendEmail(mailObj) {
+async function sendEmail(mailObj) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -28,6 +28,24 @@ function sendEmail(mailObj) {
       pass: 'madv zedu cfqh eiyn' 
     }
   });
+
+
+
+
+  await new Promise((resolve, reject) => {
+    // verify connection configuration
+    transporter.verify(function (error, success) {
+        if (error) {
+            console.log(error);
+            reject(error);
+        } else {
+            console.log("Server is ready for emails");
+            resolve(success);
+        }
+    });
+});
+
+
 
   
   let emailContent = `Thank you for your inquiry, ${mailObj.name}!\n\n`;
