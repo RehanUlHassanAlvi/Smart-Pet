@@ -12,89 +12,22 @@ async function sendEmail(mailObj) {
       }
     });
 
-    let emailContent = `Thank you for your inquiry, ${mailObj.name}!\n\n`;
+    let emailContent=generateEmailContent(mailObj)
 
-    emailContent += `Here are the details you provided:\n`;
-    emailContent += `- Email: ${mailObj.email}\n`;
-    emailContent += `- Phone: ${mailObj.phone}\n`;
-
-    if (mailObj.shippedFrom) {
-        emailContent += `- Shipped From: ${mailObj.shippedFrom}\n`;
-    }
-
-    if (mailObj.shippedTo) {
-        emailContent += `- Shipped To: ${mailObj.shippedTo}\n`;
-    }
-
-    if (mailObj.departureDate) {
-        const departureDate = new Date(mailObj.departureDate.$date.$numberLong);
-        emailContent += `- Departure Date: ${departureDate.toDateString()}\n`;
-    }
-
-    if (mailObj.pets && mailObj.pets.length > 0) {
-        emailContent += `- Pets:\n`;
-        mailObj.pets.forEach(pet => {
-            emailContent += `  - Name: ${pet.name}\n`;
-            emailContent += `    Breed: ${pet.breed}\n`;
-            emailContent += `    Age: ${pet.ageInYears.$numberInt} years\n`;
-            emailContent += `    Weight: ${pet.weight.$numberInt} lbs\n`;
-            emailContent += `    Crate Size: ${pet.crateSize}\n`;
-        });
-    }
-
-    if (mailObj.additionalComments) {
-        emailContent += `- Additional Comments: ${mailObj.additionalComments}\n`;
-    }
-
-    if (mailObj.approvedKennels) {
-        emailContent += `- Approved Kennels: Yes\n`;
-    } else {
-        emailContent += `- Approved Kennels: No\n`;
-    }
-
-    emailContent += `- Heard about us from: ${mailObj.hearDetails}\n`;
-
-    if (mailObj.militaryVet) {
-        emailContent += `- Military Veteran: Yes\n`;
-    } else {
-        emailContent += `- Military Veteran: No\n`;
-    }
-
-    if (mailObj.petsMicrochipped) {
-        emailContent += `- Pets Microchipped: Yes\n`;
-    } else {
-        emailContent += `- Pets Microchipped: No\n`;
-    }
-
-    if (mailObj.rabiesVaccine) {
-        emailContent += `- Rabies Vaccine: Yes\n`;
-    } else {
-        emailContent += `- Rabies Vaccine: No\n`;
-    }
-
-    if (mailObj.with5DaysTravel) {
-        emailContent += `- With 5 Days Travel: Yes\n`;
-    } else {
-        emailContent += `- With 5 Days Travel: No\n`;
-    }
-
-    let toEmail = '';
-    if (mailObj.to === 'formStep1'){
-      toEmail = 'ralvi7007@gmail.com';
-    }
-
+    let toEmail = 'ralvi7007@gmail.com';
+  
     const mailOptions_admin = {
       from: 'smartPet@gmail.com',
       to: toEmail, 
       subject: 'User Filled Form',
-      text: emailContent
+      html: emailContent
     };
 
     const mailOptions_user = {
       from: 'smartPet@gmail.com',
       to: mailObj.email, 
       subject: 'User Filled Form',
-      text: emailContent
+      html: emailContent
     };
 
     transporter.sendMail(mailOptions_admin, (error, info) => {
@@ -131,5 +64,92 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Error Sending Email!', userName });
   }
 });
+
+
+
+// Generate HTML email content
+const generateEmailContent = (userData) => {
+  let htmlContent = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      .invoice {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .invoice h2 {
+        color: #007bff;
+      }
+      .invoice p {
+        margin-bottom: 5px;
+      }
+      .pet {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      .pet h3 {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+  <h2>Thanks for filling the estimate form  ${userData.invoices[0].name} !</h2>
+    <h1>Invoice Details</h1>
+  
+    <!-- Iterate over invoices -->
+    ${userData.invoices.map(invoice => `
+      <div class="invoice">
+        <h2>Name: ${invoice.name}</h2>
+        <p>Phone: ${invoice.phone}</p>
+        <p>Shipped From: ${invoice.shippedFrom}</p>
+        <p>Shipped To: ${invoice.shippedTo}</p>
+        <p>Departure Date: ${invoice.departureDate}</p>
+        <h3>Pet Details</h3>
+        <!-- Iterate over pets -->
+        ${invoice.pets.map(pet => `
+          <div class="pet">
+            <p>Name: ${pet.name}</p>
+            <p>Breed: ${pet.breed}</p>
+            <p>Age: ${pet.ageInYears} years</p>
+            <p>Weight: ${pet.weight} lbs</p>
+            <p>Height: ${pet.height} inches</p>
+            <p>Width: ${pet.width} inches</p>
+          </div>
+        `).join('')}
+  
+        <p>Additional Comments: ${invoice.additionalComments}</p>
+        <p>Approved Kennels: ${invoice.approvedKennels}</p>
+        <p>Hear Details: ${invoice.hearDetails}</p>
+        <p>Military Vet: ${invoice.militaryVet}</p>
+        <p>Pets Microchipped: ${invoice.petsMicrochipped}</p>
+        <p>Rabies Vaccine: ${invoice.rabiesVaccine}</p>
+        <p>With 5 Days Travel: ${invoice.with5DaysTravel}</p>
+      </div>
+    `).join('')}
+  </body>
+  </html>`;  
+
+  return htmlContent;
+};
+
 
 module.exports = router;
