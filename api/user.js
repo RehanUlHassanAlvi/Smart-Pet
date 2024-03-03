@@ -29,9 +29,9 @@ router.post('/', async (req, res) => {
     } else {
       // Insert scenario
       let maxId = 0;
-      const result = await User.find().sort({ _id: -1 }).limit(1);
+      const result = await User.find().sort({ id: -1 }).limit(1);
       if (result.length > 0) {
-        maxId = result[0]._id + 1;
+        maxId = result[0].id + 1;
         console.log('Max ID:', maxId);
       } else {
         console.log('No documents found in the collection.');
