@@ -1,6 +1,6 @@
 const express = require('express');
 const Pusher = require('pusher');
-const User = require('../models/user');
+const ChatHistory = require('../models/ChatHistory.js');
 
 const router = express.Router();
 const pusher = new Pusher({
@@ -48,7 +48,7 @@ router.post('/messages', async (req, res) => {
       }
   
       res.json(chatHistory.messages);
-    } catch (error) {
+    } catch (error) {node
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
