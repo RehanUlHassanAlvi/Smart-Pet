@@ -13,7 +13,6 @@ const pusher = new Pusher({
 // Save message to database and broadcast via Pusher
 router.post('/messages', async (req, res) => {
     const { userId, sender, text } = req.body;
-  
     try {
       let chatHistory = await ChatHistory.findOne({ userId });
   
@@ -25,7 +24,8 @@ router.post('/messages', async (req, res) => {
       // Add the new message to the chat history
       chatHistory.messages.push({ sender, text });
       await chatHistory.save();
-  
+      console.log(req.body);
+
       // Trigger 'message' event on 'chat' channel (Pusher)
       pusher.trigger('chat', 'message', { sender, text ,userId});
   
