@@ -1,6 +1,6 @@
 const express = require('express');
 const Pusher = require('pusher');
-const ChatHistory = require('../models/ChatHistory.js');
+const ChatHistory = require('../models/chatHistory.js');
 
 const router = express.Router();
 const pusher = new Pusher({
