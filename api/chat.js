@@ -27,7 +27,7 @@ router.post('/messages', async (req, res) => {
       await chatHistory.save();
   
       // Trigger 'message' event on 'chat' channel (Pusher)
-      pusher.trigger('chat', 'message', { sender, text });
+      pusher.trigger('chat', 'message', { sender, text ,userId});
   
       res.sendStatus(200);
     } catch (error) {
