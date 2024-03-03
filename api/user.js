@@ -52,4 +52,25 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+
+
+   // Retrieve chat history for a user
+   router.get('/users', async (req, res) => {
+   
+  
+    try {
+      const users = await User.find({ });
+  
+      if (!users) {
+        return res.status(200).json({ message: 'No Users found' });
+      }
+  
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
 module.exports = router;
