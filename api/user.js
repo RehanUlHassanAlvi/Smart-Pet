@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
       return res.status(200).json({ message: 'User updated successfully', user });
     } else {
       // Insert scenario
-      let maxId = 0;
+      let maxId = 1;
       const result = await User.find().sort({ id: -1 }).limit(1);
       if (result.length > 0) {
         maxId = result[0].id + 1;
