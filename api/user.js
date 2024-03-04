@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
    
   
     try {
-      const users = await User.find({ });
+      const users = await User.find({ }).sort({ id : -1});
   
       if (!users) {
         return res.status(200).json({ message: 'No Users found' });
