@@ -36,9 +36,14 @@ router.post('/', async (req, res) => {
       } else {
         console.log('No documents found in the collection.');
       }
+      
+
+        
+      
 
       const userObj = req.body;
       userObj.id = maxId;
+      userObj.leadId=formatId(maxId)
       userObj.invoices[0].invoiceId = 1;
 
       user = new User(userObj);
@@ -72,5 +77,29 @@ router.post('/', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+
+      //generate leadId from Id
+  function formatId( id) {
+    let today = new Date();
+    let year = today.getFullYear().toString();
+    let month = (today.getMonth() + 1).toString().padStart(2, '0'); 
+    let day = today.getDate().toString().padStart(2, '0');  
+    let yymmdd = year + month + day;
+
+    let paddedId = id.toString().padStart(3, '0'); // Pad ID to at least 3 digits
+    let length = paddedId.length;
+    let maxDigits = 3; // Maximum digits before extending YYMMDD
+
+    while (length > maxDigits) {
+        yymmdd += 'N'; // Extend YYMMDD with 'N' for each additional digit
+        maxDigits++;
+    }
+
+    return yymmdd + paddedId;
+}
+
+
+
 
 module.exports = router;
