@@ -37,10 +37,6 @@ router.post('/', async (req, res) => {
         console.log('No documents found in the collection.');
       }
       
-
-        
-      
-
       const userObj = req.body;
       userObj.id = maxId;
       userObj.leadId=formatId(maxId)
@@ -79,8 +75,8 @@ router.post('/', async (req, res) => {
   });
 
 
-      //generate leadId from Id
-  function formatId( id) {
+  //generate leadId from Id
+  function formatId(id) {
     let today = new Date();
     let year = today.getFullYear().toString();
     let month = (today.getMonth() + 1).toString().padStart(2, '0'); 

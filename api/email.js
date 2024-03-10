@@ -7,24 +7,24 @@ async function sendEmail(mailObj) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'treatmentbuilderapp@gmail.com', 
-        pass: 'madv zedu cfqh eiyn' 
+        user: 'info@smartpetairtravel.com', 
+        pass: 'hith jacw dkjz vjec' 
       }
     });
 
     let emailContent=generateEmailContent(mailObj)
 
-    let toEmail = 'ralvi7007@gmail.com';
+    let toEmail = 'info@smartpetairtravel.com';
   
     const mailOptions_admin = {
-      from: 'smartPet@gmail.com',
+      from: 'info@smartpetairtravel.com',
       to: toEmail, 
       subject: 'User Filled Form',
       html: emailContent
     };
 
     const mailOptions_user = {
-      from: 'smartPet@gmail.com',
+      from: 'info@smartpetairtravel.com',
       to: mailObj.email, 
       subject: 'User Filled Form',
       html: emailContent
@@ -75,7 +75,6 @@ const generateEmailContent = (userData) => {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Details</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -112,39 +111,34 @@ const generateEmailContent = (userData) => {
     </style>
   </head>
   <body>
-  <h2>Thanks for filling the estimate form  ${userData.invoices[0].name} !</h2>
-    <h1>Invoice Details</h1>
-  
+  <h2>Thanks for filling the estimate form  ${userData.invoices[0].name} !</h2>  
     <!-- Iterate over invoices -->
     ${userData.invoices.map(invoice => `
       <div class="invoice">
         <h2>Name: ${invoice.name}</h2>
         <p>Phone: ${invoice.phone}</p>
-        <p>Shipped From: ${invoice.shippedFrom}</p>
-        <p>Shipped To: ${invoice.shippedTo}</p>
+        <p>Moved From: ${invoice.shippedFrom}</p>
+        <p>Moved To: ${invoice.shippedTo}</p>
         <p>Departure Date: ${invoice.departureDate}</p>
         <h3>Pet Details</h3>
-        <!-- Iterate over pets -->
         ${invoice.pets.map(pet => `
           <div class="pet">
             <p>Name: ${pet.name}</p>
             <p>Breed: ${pet.breed}</p>
-            <p>Age: ${pet.ageInYears} years</p>
+            <p>Age:   ${pet.ageInYears} years</p>
             <p>Weight: ${pet.weight} lbs</p>
             <p>Height: ${pet.height} inches</p>
-            <p>Width: ${pet.width} inches</p>
-          </div>
-        `).join('')}
+            <p>length: ${pet.width} inches</p>
+          </div>`).join('')}
   
         <p>Additional Comments: ${invoice.additionalComments}</p>
-        <p>Approved Kennels: ${invoice.approvedKennels}</p>
-        <p>Hear Details: ${invoice.hearDetails}</p>
+        <p>Have airline approved crates: ${invoice.approvedKennels}</p>
+        <p>Referred By: ${invoice.hearDetails}</p>
         <p>Military Vet: ${invoice.militaryVet}</p>
         <p>Pets Microchipped: ${invoice.petsMicrochipped}</p>
-        <p>Rabies Vaccine: ${invoice.rabiesVaccine}</p>
-        <p>With 5 Days Travel: ${invoice.with5DaysTravel}</p>
-      </div>
-    `).join('')}
+        <p>Vaccinated for rabies in past 12 months: ${invoice.rabiesVaccine}</p>
+        <p>Personal travel within 5 days: ${invoice.with5DaysTravel}</p>
+      </div>`).join('')}
   </body>
   </html>`;  
 
