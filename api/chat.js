@@ -30,7 +30,7 @@ router.post('/messages', async (req, res) => {
       //Update user timestamp 
       try {
         // Find the user by userId and await the execution of the query
-        let userObj = await User.findOne({ id: userId }); 
+        let userObj = await user.findOne({ id: userId }); 
       
         if (!userObj) {
           return res.status(404).json({ message: 'User not found' });
