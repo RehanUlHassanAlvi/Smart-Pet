@@ -4,10 +4,10 @@ const ChatHistory = require('../models/chatHistory.js');
 
 const router = express.Router();
 const pusher = new Pusher({
-  appId: '1769206',
-  key: 'f4b1d8d2257ca2f60d57',
-  secret: '2dfe662f2fac147f05d4',
-  cluster: 'us2',
+  appId: '1765121',
+  key: 'ef1652ecbd8986016d7d',
+  secret: 'adaf7bd2c537f2e6d386',
+  cluster: 'ap2',
 });
 
 // Save message to database and broadcast via Pusher
