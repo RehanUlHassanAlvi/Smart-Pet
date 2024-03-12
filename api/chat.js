@@ -1,6 +1,7 @@
 const express = require('express');
 const Pusher = require('pusher');
 const ChatHistory = require('../models/chatHistory.js');
+const user=require('../models/user.js')
 
 const router = express.Router();
 const pusher = new Pusher({
@@ -26,6 +27,12 @@ router.post('/messages', async (req, res) => {
       await chatHistory.save();
       console.log(req.body);
 
+      //Update user timestamp 
+      userObj=user.findOne({"userId":userId})
+      userObj.lastMessageTimestamp= new Date();
+      await userObj.save();
+
+      
       // Trigger 'message' event on 'chat' channel (Pusher)
       await pusher.trigger('chat', 'message', { sender, text ,userId});
   
