@@ -28,10 +28,27 @@ router.post('/messages', async (req, res) => {
       console.log(req.body);
 
       //Update user timestamp 
-      userObj=user.findOne({"userId":userId})
-      userObj.lastMessageTimestamp= new Date();
-      await userObj.save();
-
+      try {
+        // Find the user by userId and await the execution of the query
+        let userObj = await User.findOne({ id: userId }); 
+      
+        if (!userObj) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+      
+        // Update the lastMessageTimestamp field
+        userObj.lastMessageTimestamp = new Date();
+      
+        // Save the updated user object
+        await userObj.save();
+      
+        // Do something with the updated user object if needed
+        res.json(userObj);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+      
       
       // Trigger 'message' event on 'chat' channel (Pusher)
       await pusher.trigger('chat', 'message', { sender, text ,userId});
