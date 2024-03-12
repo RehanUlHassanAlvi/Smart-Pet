@@ -11,54 +11,34 @@ const pusher = new Pusher({
   cluster: 'ap2',
 });
 
-// Save message to database and broadcast via Pusher
 router.post('/messages', async (req, res) => {
-    const { userId, sender, text } = req.body;
-    try {
-      let chatHistory = await ChatHistory.findOne({ userId });
+  const { userId, sender, text } = req.body;
   
-      if (!chatHistory) {
-        // If chat history doesn't exist, create a new one
-        chatHistory = new ChatHistory({ userId, messages: [] });
-      }
-  
-      // Add the new message to the chat history
-      chatHistory.messages.push({ sender, text });
-      await chatHistory.save();
-      console.log(req.body);
-
-      //Update user timestamp 
-      try {
-        // Find the user by userId and await the execution of the query
-        let userObj = await user.findOne({ id: userId }); 
+  try {
+      // Save message to chat history
+      let chatHistory = await ChatHistory.findOneAndUpdate(
+          { userId },
+          { $push: { messages: { sender, text } } },
+          { upsert: true, new: true }
+      );
       
-        if (!userObj) {
-          return res.status(404).json({ message: 'User not found' });
-        }
+      // Update user timestamp
+      let userObj = await user.findOneAndUpdate(
+          { id: userId },
+          { lastMessageTimestamp: new Date() },
+          { new: true }
+      );
       
-        // Update the lastMessageTimestamp field
-        userObj.lastMessageTimestamp = new Date();
+      // Trigger Pusher event
+      await pusher.trigger('chat', 'message', { sender, text, userId });
       
-        // Save the updated user object
-        await userObj.save();
-      
-        // Do something with the updated user object if needed
-        res.json(userObj);
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-      }
-      
-      
-      // Trigger 'message' event on 'chat' channel (Pusher)
-      await pusher.trigger('chat', 'message', { sender, text ,userId});
-  
       res.sendStatus(200);
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
-    }
-  });
+  }
+});
+
   
   // Retrieve chat history for a user
   router.get('/messages/:userId', async (req, res) => {
