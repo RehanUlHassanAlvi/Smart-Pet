@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const express = require('express');
 const router = express.Router();
+const PhoneNumber = require('libphonenumber-js');
+
 
 async function sendEmail(mailObj) {
   return new Promise((resolve, reject) => {
@@ -112,11 +114,10 @@ const generateEmailContent = (userData) => {
   </head>
   <body>
   <h2>Thanks for filling the estimate form  ${userData.rfqs[0].name} !</h2>  
-    <!-- Iterate over rfqs -->
     ${userData.rfqs.map(rfq => `
       <div class="rfq">
         <h2>Name: ${rfq.name}</h2>
-        <p>Phone: ${rfq.phone}</p>
+        <p>Phone: ${formatPhoneNumber(rfq.phone)}</p>
         <p>Moved From: ${rfq.shippedFrom}</p>
         <p>Moved To: ${rfq.shippedTo}</p>
         <p>Departure Date: ${formatDate(rfq.departureDate.toString())}</p>
@@ -128,16 +129,17 @@ const generateEmailContent = (userData) => {
             <p>Age:   ${pet.ageInYears} years</p>
             <p>Weight: ${pet.weight} lbs</p>
             <p>Height: ${pet.height} inches</p>
-            <p>length: ${pet.width} inches</p>
+            <p>Length: ${pet.width} inches</p>
           </div>`).join('')}
   
-        <p>Additional Comments: ${rfq.additionalComments}</p>
         <p>Have airline approved crates: ${rfq.approvedKennels}</p>
         <p>Referred By: ${rfq.hearDetails}</p>
         <p>Military Vet: ${rfq.militaryVet}</p>
         <p>Pets Microchipped: ${rfq.petsMicrochipped}</p>
-        <p>Vaccinated for rabies in past 12 months: ${rfq.rabiesVaccine}</p>
+        <p>Rabies in past 12 months: ${rfq.rabiesVaccine}</p>
         <p>Personal travel within 5 days: ${rfq.with5DaysTravel}</p>
+        <p>Additional Comments: ${rfq.additionalComments}</p>
+
       </div>`).join('')}
   </body>
   </html>`;  
@@ -163,6 +165,16 @@ function formatDate(dateString) {
   const ordinalDay = getOrdinal(day);
 
   return `${monthName} ${ordinalDay}, ${year}`;
+}
+
+function formatPhoneNumber(phoneNumber) {
+    try {
+        const number = PhoneNumber.parse(phoneNumber);
+        return PhoneNumber.format(number, PhoneNumber.FORMAT.NATIONAL);
+    } catch (error) {
+        console.error('Error formatting phone number:', error.message);
+        return phoneNumber; // Return original number if formatting fails
+    }
 }
 
 module.exports = router;
