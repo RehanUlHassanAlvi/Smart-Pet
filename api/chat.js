@@ -5,10 +5,10 @@ const user=require('../models/user.js')
 
 const router = express.Router();
 const pusher = new Pusher({
-  appId: '1765121',
-  key: 'ef1652ecbd8986016d7d',
-  secret: 'adaf7bd2c537f2e6d386',
-  cluster: 'ap2',
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
+  cluster: process.env.PUSHER_CLUSTER,
 });
 
 router.post('/messages', async (req, res) => {

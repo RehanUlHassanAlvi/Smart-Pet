@@ -8,20 +8,20 @@ router.post('/', async (req, res) => {
     let user = await User.findOne({ 'email': email });
 
     if (user) {
-      let existingInvoice = user.invoices.find(invoice => invoice.phone === req.body.invoices[0].phone);
+      let existingRfq = user.rfqs.find(rfq => rfq.phone === req.body.rfqs[0].phone);
 
-      if (existingInvoice) {
-        // If invoice already exists, update its details
-        existingInvoice = Object.assign(existingInvoice, req.body.invoices[0]);
+      if (existingRfq) {
+        // If rfq already exists, update its details
+        existingRfq = Object.assign(existingRfq, req.body.rfqs[0]);
       } else {
-        // If invoice doesn't exist, create a new one
-        let maxInvoiceId = 0;
-        if (user.invoices && user.invoices.length > 0) {
-          maxInvoiceId = Math.max(...user.invoices.map(invoice => invoice.invoiceId));
+        // If rfq doesn't exist, create a new one
+        let maxrfqId = 0;
+        if (user.rfqs && user.rfqs.length > 0) {
+          maxrfqId = Math.max(...user.rfqs.map(rfq => rfq.rfqId));
         }
-        const currentInvoice = req.body.invoices[0];
-        currentInvoice.invoiceId = maxInvoiceId + 1;
-        user.invoices.push(currentInvoice);
+        const currentrfq = req.body.rfqs[0];
+        currentrfq.rfqId = maxrfqId + 1;
+        user.rfqs.push(currentrfq);
       }
 
       await user.save();
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
       const userObj = req.body;
       userObj.id = maxId;
       userObj.leadId=formatId(maxId)
-      userObj.invoices[0].invoiceId = 1;
+      userObj.rfqs[0].rfqId = 1;
 
       user = new User(userObj);
       await user.save();

@@ -5,8 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
   leadId: { type: String, required: false },
   lastMessageTimestamp: { type: Date },
-  invoices: [{
-    invoiceId: { type: Number, required: true },
+  rfqs: [{
+    rfqId: { type: Number, required: true },
     phone: { type: String, required: true },
     name: { type: String, required: true },
     shippedFrom: { type: String, required: false },

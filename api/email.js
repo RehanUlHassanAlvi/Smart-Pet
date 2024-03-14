@@ -86,17 +86,17 @@ const generateEmailContent = (userData) => {
         color: #333;
         text-align: center;
       }
-      .invoice {
+      .rfq {
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         padding: 20px;
         margin-bottom: 20px;
       }
-      .invoice h2 {
+      .rfq h2 {
         color: #007bff;
       }
-      .invoice p {
+      .rfq p {
         margin-bottom: 5px;
       }
       .pet {
@@ -111,17 +111,17 @@ const generateEmailContent = (userData) => {
     </style>
   </head>
   <body>
-  <h2>Thanks for filling the estimate form  ${userData.invoices[0].name} !</h2>  
-    <!-- Iterate over invoices -->
-    ${userData.invoices.map(invoice => `
-      <div class="invoice">
-        <h2>Name: ${invoice.name}</h2>
-        <p>Phone: ${invoice.phone}</p>
-        <p>Moved From: ${invoice.shippedFrom}</p>
-        <p>Moved To: ${invoice.shippedTo}</p>
-        <p>Departure Date: ${invoice.departureDate}</p>
+  <h2>Thanks for filling the estimate form  ${userData.rfqs[0].name} !</h2>  
+    <!-- Iterate over rfqs -->
+    ${userData.rfqs.map(rfq => `
+      <div class="rfq">
+        <h2>Name: ${rfq.name}</h2>
+        <p>Phone: ${rfq.phone}</p>
+        <p>Moved From: ${rfq.shippedFrom}</p>
+        <p>Moved To: ${rfq.shippedTo}</p>
+        <p>Departure Date: ${formatDate(rfq.departureDate.toString())}</p>
         <h3>Pet Details</h3>
-        ${invoice.pets.map(pet => `
+        ${rfq.pets.map(pet => `
           <div class="pet">
             <p>Name: ${pet.name}</p>
             <p>Breed: ${pet.breed}</p>
@@ -131,13 +131,13 @@ const generateEmailContent = (userData) => {
             <p>length: ${pet.width} inches</p>
           </div>`).join('')}
   
-        <p>Additional Comments: ${invoice.additionalComments}</p>
-        <p>Have airline approved crates: ${invoice.approvedKennels}</p>
-        <p>Referred By: ${invoice.hearDetails}</p>
-        <p>Military Vet: ${invoice.militaryVet}</p>
-        <p>Pets Microchipped: ${invoice.petsMicrochipped}</p>
-        <p>Vaccinated for rabies in past 12 months: ${invoice.rabiesVaccine}</p>
-        <p>Personal travel within 5 days: ${invoice.with5DaysTravel}</p>
+        <p>Additional Comments: ${rfq.additionalComments}</p>
+        <p>Have airline approved crates: ${rfq.approvedKennels}</p>
+        <p>Referred By: ${rfq.hearDetails}</p>
+        <p>Military Vet: ${rfq.militaryVet}</p>
+        <p>Pets Microchipped: ${rfq.petsMicrochipped}</p>
+        <p>Vaccinated for rabies in past 12 months: ${rfq.rabiesVaccine}</p>
+        <p>Personal travel within 5 days: ${rfq.with5DaysTravel}</p>
       </div>`).join('')}
   </body>
   </html>`;  
@@ -145,5 +145,24 @@ const generateEmailContent = (userData) => {
   return htmlContent;
 };
 
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthName = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  
+  // Function to add ordinal suffix to the day
+  function getOrdinal(day) {
+      const suffixes = ['th', 'st', 'nd', 'rd'];
+      const v = day % 100;
+      return day + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+  }
+
+  const ordinalDay = getOrdinal(day);
+
+  return `${monthName} ${ordinalDay}, ${year}`;
+}
 
 module.exports = router;
