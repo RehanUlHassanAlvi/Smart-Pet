@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
       name: { type: String, required: true },
       breed: { type: String },
       ageInYears: { type: Number },
+      pet: {type: String, required: false},
       weight: { type: Number },
       height: { type: Number },
       width: { type: Number }

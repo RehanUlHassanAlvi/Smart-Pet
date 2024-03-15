@@ -124,6 +124,7 @@ const generateEmailContent = (userData) => {
         <h3>Pet Details</h3>
         ${rfq.pets.map(pet => `
           <div class="pet">
+          <p>Tyoe: ${pet.petType} lbs</p>
             <p>Name: ${pet.name}</p>
             <p>Breed: ${pet.breed}</p>
             <p>Age:   ${pet.ageInYears} years</p>
