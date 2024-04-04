@@ -4,13 +4,13 @@ const router = express.Router();
 const PhoneNumber = require('libphonenumber-js');
 
 
-async function sendEmail(mailObj) {
+async function sendFormEmail(mailObj) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'info@smartpetairtravel.com', 
-        pass: 'hith jacw dkjz vjec' 
+        user: 'treatmentbuilderapp@gmail.com',
+        pass: 'madv zedu cfqh eiyn'
       }
     });
 
@@ -54,18 +54,76 @@ async function sendEmail(mailObj) {
   });
 }
 
-router.post('/', async (req, res) => {
-  const mailObj = req.body;
-  const userName = req.body.name;
 
+
+async function sendQuoteEmail(mailObj) {
   try {
-    await sendEmail(mailObj); // Wait for email sending to complete
-    res.status(200).json({ message: 'Email successfully sent!', userName });
+    // Generate email content asynchronously
+    const emailContent = await generateQuotationEmailContent(mailObj);
+
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'treatmentbuilderapp@gmail.com',
+        pass: 'madv zedu cfqh eiyn'        
+      }
+    });
+
+    // Define mail options
+    const mailOptions_admin = {
+      from: 'ralvi7007@gmail.com',
+      to: 'ralvi7007@gmail.com',
+      subject: 'Quotation Sent to User',
+      html: emailContent
+    };
+
+    const mailOptions_user = {
+      from: 'ralvi7007@gmail.com',
+      to: mailObj.email,
+      subject: 'Quotation Response',
+      html: emailContent
+    };
+
+    // Send emails
+    await transporter.sendMail(mailOptions_admin);
+    await transporter.sendMail(mailOptions_user);
+
+    console.log('Emails sent successfully');
   } catch (error) {
-    console.error('Error sending email:', error);
-    res.status(500).json({ message: 'Error Sending Email!', userName });
+    console.error('Error sending emails:', error);
+    throw error; // Re-throw the error for handling it outside of this function
   }
-});
+}
+
+async function generateQuotationEmailContent(mailObj) {
+  // Construct email content with pet information, routing details, and comments at the bottom
+  let emailContent = `<div style="background-color: #f2f2f2; padding: 20px; margin: 0;">`;
+  
+  // Add routing information
+  if (mailObj.routing) {
+      emailContent += '<h3>Routing Information:</h3>';
+      emailContent += `<p>From: ${mailObj.routing.from}</p>`;
+      if (mailObj.routing.via && mailObj.routing.via.length > 0) {
+          emailContent += `<p>Via: ${mailObj.routing.via.join(', ')}</p>`;
+      }
+      emailContent += `<p>To: ${mailObj.routing.to}</p>`;
+  } else {
+      emailContent += `<p>No routing information available</p>`;
+  }
+
+  // Add comments
+  if (mailObj.comments) {
+      emailContent += `<h3 style="text-align: center;">Comments from the Business</h3>`;
+      emailContent += `<p style="text-align: center;">${mailObj.comments}</p>`;
+  } else {
+      emailContent += `<h3 style="text-align: center;">No comments available</h3>`;
+  }
+
+  emailContent += `</div>`;
+  
+  return emailContent;
+}
 
 
 
@@ -124,7 +182,7 @@ const generateEmailContent = (userData) => {
         <h3>Pet Details</h3>
         ${rfq.pets.map(pet => `
           <div class="pet">
-          <p>Tyoe: ${pet.petType} lbs</p>
+          <p>Type: ${pet.petType}</p>
             <p>Name: ${pet.name}</p>
             <p>Breed: ${pet.breed}</p>
             <p>Age:   ${pet.ageInYears} years</p>
@@ -178,4 +236,4 @@ function formatPhoneNumber(phoneNumber) {
     }
 }
 
-module.exports = router;
+module.exports = {router, sendQuoteEmail}

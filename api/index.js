@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const chatRouter = require('./chat');
-const emailRouter = require('./email');
+const { router: emailRouter } = require('./email.js');
 
 router.use('/chat', chatRouter);
 router.use('/email', emailRouter);
