@@ -78,7 +78,7 @@ async function sendQuoteEmail(mailObj) {
       from: 'ralvi7007@gmail.com',
       to: 'ralvi7007@gmail.com',
       subject: 'Quotation Sent to User',
-      html: emailContent,
+      html: emailContent
       // attachments: attachments // Attachments included here
     };
 
@@ -86,7 +86,7 @@ async function sendQuoteEmail(mailObj) {
       from: 'ralvi7007@gmail.com',
       to: mailObj.email,
       subject: 'Quotation Response',
-      html: emailContent,
+      html: emailContent
       // attachments: attachments // Attachments included here
     };
 
@@ -233,10 +233,10 @@ async function generateQuotationEmailContent(mailObj) {
   // Define attachments
   const attachments = [
     {
-      filename: 'pet.png',
-      content: petImageContent,
-      encoding: 'base64',
-      cid: 'petImage', // Content ID for referencing in HTML
+      // filename: 'pet.png',
+      // content: petImageContent,
+      // encoding: 'base64',
+      // cid: 'petImage', // Content ID for referencing in HTML
     },
   ];
 
