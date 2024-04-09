@@ -86,231 +86,231 @@ const generatedQuoteSchema = new mongoose.Schema({
       airline: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       admin: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       crate: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       vetCharges: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       usdaCharges: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       groundOrigin: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       boardingOrigin: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       boardingStop: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       boardingArrival: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       groundArrival: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       importPermit: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       customClearance: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         },
         included: {
           type: Boolean,
-          required: true
+          required: false
         }
       },
       total: {
         cost: {
           type: Number,
-          required: true
+          required: false
         },
         margin: {
           type: Number,
-          required: true
+          required: false
         },
         price: {
           type: Number,
-          required: true
+          required: false
         }
       }
     },

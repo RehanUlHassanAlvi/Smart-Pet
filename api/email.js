@@ -4,6 +4,7 @@ const router = express.Router();
 const PhoneNumber = require('libphonenumber-js');
 
 
+
 async function sendFormEmail(mailObj) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
@@ -54,12 +55,13 @@ async function sendFormEmail(mailObj) {
   });
 }
 
-
-
 async function sendQuoteEmail(mailObj) {
   try {
     // Generate email content asynchronously
-    const emailContent = await generateQuotationEmailContent(mailObj);
+    const { emailContent, attachments } = await generateQuotationEmailContent(mailObj);
+
+    // Print email content for debugging
+    console.log('Email Content:', emailContent);
 
     // Create transporter
     const transporter = nodemailer.createTransport({
@@ -75,14 +77,16 @@ async function sendQuoteEmail(mailObj) {
       from: 'ralvi7007@gmail.com',
       to: 'ralvi7007@gmail.com',
       subject: 'Quotation Sent to User',
-      html: emailContent
+      html: emailContent,
+      attachments: attachments // Attachments included here
     };
 
     const mailOptions_user = {
       from: 'ralvi7007@gmail.com',
       to: mailObj.email,
       subject: 'Quotation Response',
-      html: emailContent
+      html: emailContent,
+      attachments: attachments // Attachments included here
     };
 
     // Send emails
@@ -96,33 +100,171 @@ async function sendQuoteEmail(mailObj) {
   }
 }
 
+
 async function generateQuotationEmailContent(mailObj) {
+  const fs = require('fs');
+
+  // Read the SVG image file
+  const petImageContent = fs.readFileSync('src/pet.png', { encoding: 'base64' });
+
   // Construct email content with pet information, routing details, and comments at the bottom
-  let emailContent = `<div style="background-color: #f2f2f2; padding: 20px; margin: 0;">`;
-  
-  // Add routing information
-  if (mailObj.routing) {
-      emailContent += '<h3>Routing Information:</h3>';
-      emailContent += `<p>From: ${mailObj.routing.from}</p>`;
-      if (mailObj.routing.via && mailObj.routing.via.length > 0) {
-          emailContent += `<p>Via: ${mailObj.routing.via.join(', ')}</p>`;
+  let emailContent = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #e5dcd2; /* Light beige background for the entire email */
+        color: #969796; /* Text color */
       }
-      emailContent += `<p>To: ${mailObj.routing.to}</p>`;
-  } else {
-      emailContent += `<p>No routing information available</p>`;
-  }
+      .center-container {
+        text-align: center;
+        max-width: 100%; 
+        padding: 0 10%;
+    }
+    
+    .content-container {
+        background-color: #fff; /* White background */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px; /* Add space from all sides */
+        margin: 0 auto; /* Center the content container horizontally */
+        max-width: 100%; /* Make it fill the whole width of the viewport */
+    }
+    
+    .outer-container {
+        background-color: #e5dcd2; /* Light beige background for the entire email */
+        padding: 0 10%; /* Padding on the sides */
+    }
+    
+    @media (max-width: 767px) {
+        .center-container,
+        .content-container {
+            padding: 0; /* Remove padding on mobile devices */
+        }
+        .outer-container {
+            padding: 0; /* Remove padding on mobile devices */
+        }
+    }
+    
+    
+      h1 {
+        color: #333;
+        margin-top: 0; /* Remove default margin */
+      }
+      .details {
+        margin-top: 20px;
+        text-align: left;
+      }
+      .details p span {
+        font-weight: bold; /* Make keys bold */
+        color: #969796; /* Text color */
+      }
+      .estimate-notes {
+        margin-top: 20px;
+        font-style: italic;
+        text-align: left;
+      }
+      .estimate-notes p {
+        font-weight: bold; /* Make Estimate Notes bold */
+        font-size: 16px; /* One size bigger than normal text */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        color: #969796; /* Text color */
+      }
+      th {
+        border-bottom-width: 2px; /* Thicker bottom border for table headers */
+      }
+      tr:nth-child(3n+2) td {
+        border-top: 1px solid #ddd; /* Add border between specified rows */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer-container">
+      <div class="center-container">
+        <div class="content-container">
+        <img src="cid:petImage" alt="Image" style="width: 100%; max-width: 600px; margin-bottom: 20px;">
+          <h2>View your customized estimate below:</h2>
+          <div class="details">
+          <p><span>Name:</span> ${mailObj.name}</p>
+          <p><span>Email:</span> ${mailObj.email}</p>
+          <p><span>From Address:</span> ${mailObj.routing.from}</p>
+          <p><span>To Address:</span> ${mailObj.routing.to}</p>
+          <p><span>Ideal Pickup Date:</span> ${formatDate(mailObj.timestamp)}</p>
+          <p><span>Number of Pets:</span> ${mailObj.pets.length}</p>
+          </div>
+          <table>
+            <tr>
+              <th>Service</th>
+              <th>Included</th>
+            </tr>
+            ${generateServiceRows(mailObj)}
+            <tr>
+              <th>Total</th>
+              <th>$${mailObj.categories.total.price}</th>
+            </tr>
+          </table>
+          <div class="estimate-notes">
+            <p>Estimate Notes:</p>
+            <p>${mailObj.comments || 'No comments'}</p>
+          </div>
+          <h1>Thank you for choosing Smart Pet Air Travel!</h1>
+        </div>
 
-  // Add comments
-  if (mailObj.comments) {
-      emailContent += `<h3 style="text-align: center;">Comments from the Business</h3>`;
-      emailContent += `<p style="text-align: center;">${mailObj.comments}</p>`;
-  } else {
-      emailContent += `<h3 style="text-align: center;">No comments available</h3>`;
-  }
+      </div>
+    </div>
+  </body>
+  </html>
+  `;
 
-  emailContent += `</div>`;
-  
-  return emailContent;
+  // Define attachments
+  const attachments = [
+    {
+      filename: 'pet.svg',
+      content: petImageContent,
+      encoding: 'base64',
+      cid: 'petImage', // Content ID for referencing in HTML
+    },
+  ];
+
+  return { emailContent, attachments };
+
+  function generateServiceRows(mailObj) {
+    const serviceCharges = [
+      { name: 'Air Cargo Charges', value: mailObj.rates.airCargoCharges },
+      { name: 'Administrative Fees', value: mailObj.categories.admin.included },
+      { name: 'Kennel Charges', value: mailObj.categories.crate.included },
+      { name: 'Veterinary Charges', value: mailObj.categories.vetCharges.included },
+      { name: 'USDA Charges', value: mailObj.categories.usdaCharges.included },
+      { name: 'Ground @ Origin', value: mailObj.categories.groundOrigin.included },
+      { name: 'Boarding @ Origin', value: mailObj.categories.boardingOrigin.included },
+      { name: 'Boarding @ Stop', value: mailObj.categories.boardingStop.included },
+      { name: 'Boarding @ Arrival', value: mailObj.categories.boardingArrival.included },
+      { name: 'Ground @ Arrival', value: mailObj.categories.groundArrival.included },
+      { name: 'Import Permit', value: mailObj.categories.importPermit.included },
+      { name: 'Customs Clearance', value: mailObj.categories.customClearance.included },
+    ];
+
+    return serviceCharges.map(charge => `
+      <tr>
+        <td>${charge.name}</td>
+        <td>${charge.value ? 'YES' : '...'}</td>
+      </tr>
+    `).join('');
+  }
 }
 
 

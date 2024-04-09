@@ -30,23 +30,23 @@ router.post('/sendEstimate', async (req, res) => {
                     const existingQuoteItem = existingQuote.quotes[existingQuoteIndex];
                     if (existingQuoteItem.status === 'sent') {
                         // If status is 'sent', send the email again but do not update the object
-                        await sendQuoteEmail({ ...newQuote, email: userObj.email });
+                        await sendQuoteEmail({ ...newQuote, name: userObj.rfqs?.[0]?.name || userObj.name, email: userObj.email });
                     } else {
                         // If status is 'draft', update the quote and send email
                         existingQuoteItem.status = 'sent';
                         existingQuote.quotes[existingQuoteIndex] = { ...existingQuoteItem, ...newQuote };
                         await existingQuote.save();
-                        await sendQuoteEmail({ ...newQuote, email: userObj.email });
+                        await sendQuoteEmail({ ...newQuote, name: userObj.rfqs?.[0]?.name || userObj.name, email: userObj.email });
                     }
                 } else {
                     // If quoteId not found, create a new quote
                     await createNewQuote(existingQuote, newQuote);
-                    await sendQuoteEmail({ ...newQuote, email: userObj.email });
+                    await sendQuoteEmail({ ...newQuote, name: userObj.rfqs?.[0]?.name || userObj.name, email: userObj.email });
                 }
             } else {
                 // If the new quote doesn't have a quoteId, create a new quote with quoteId and quoteLeadID and status=sent
                 await createNewQuote(existingQuote, newQuote);
-                await sendQuoteEmail({ ...newQuote, email: userObj.email });
+                await sendQuoteEmail({ ...newQuote, name: userObj.rfqs?.[0]?.name || userObj.name, email: userObj.email });
             }
         }
 
