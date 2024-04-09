@@ -244,28 +244,28 @@ async function generateQuotationEmailContent(mailObj) {
 
   function generateServiceRows(mailObj) {
     const serviceCharges = [
-      { name: 'Air Cargo Charges', value: mailObj.rates.airCargoCharges },
-      { name: 'Administrative Fees', value: mailObj.categories.admin.included },
-      { name: 'Kennel Charges', value: mailObj.categories.crate.included },
-      { name: 'Veterinary Charges', value: mailObj.categories.vetCharges.included },
-      { name: 'USDA Charges', value: mailObj.categories.usdaCharges.included },
-      { name: 'Ground @ Origin', value: mailObj.categories.groundOrigin.included },
-      { name: 'Boarding @ Origin', value: mailObj.categories.boardingOrigin.included },
-      { name: 'Boarding @ Stop', value: mailObj.categories.boardingStop.included },
-      { name: 'Boarding @ Arrival', value: mailObj.categories.boardingArrival.included },
-      { name: 'Ground @ Arrival', value: mailObj.categories.groundArrival.included },
-      { name: 'Import Permit', value: mailObj.categories.importPermit.included },
-      { name: 'Customs Clearance', value: mailObj.categories.customClearance.included },
+      { name: 'Air Cargo Charges', value: mailObj.rates?.airCargoCharges },
+      { name: 'Administrative Fees', value: mailObj.categories?.admin?.included },
+      { name: 'Kennel Charges', value: mailObj.categories?.crate?.included },
+      { name: 'Veterinary Charges', value: mailObj.categories?.vetCharges?.included },
+      { name: 'USDA Charges', value: mailObj.categories?.usdaCharges?.included },
+      { name: 'Ground @ Origin', value: mailObj.categories?.groundOrigin?.included },
+      { name: 'Boarding @ Origin', value: mailObj.categories?.boardingOrigin?.included },
+      { name: 'Boarding @ Stop', value: mailObj.categories?.boardingStop?.included },
+      { name: 'Boarding @ Arrival', value: mailObj.categories?.boardingArrival?.included },
+      { name: 'Ground @ Arrival', value: mailObj.categories?.groundArrival?.included },
+      { name: 'Import Permit', value: mailObj.categories?.importPermit?.included },
+      { name: 'Customs Clearance', value: mailObj.categories?.customClearance?.included },
     ];
-
+  
     return serviceCharges.map(charge => `
       <tr>
         <td>${charge.name}</td>
-        <td>${charge.value ? 'YES' : '...'}</td>
+        <td>${charge.value !== undefined ? (charge.value ? 'YES' : '...') : '...'}</td>
       </tr>
     `).join('');
   }
-}
+  
 
 
 
