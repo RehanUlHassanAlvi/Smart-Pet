@@ -17,8 +17,8 @@ async function sendFormEmail(mailObj) {
 
     let emailContent=generateEmailContent(mailObj)
 
-   // let toEmail = 'info@smartpetairtravel.com';
-     let toEmail = 'ralvi7007@gmail.com';
+   let toEmail = 'info@smartpetairtravel.com';
+     //let toEmail = 'ralvi7007@gmail.com';
 
     const mailOptions_admin = {
       from: 'info@smartpetairtravel.com',

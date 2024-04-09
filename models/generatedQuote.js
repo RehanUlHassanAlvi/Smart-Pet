@@ -41,6 +41,10 @@ const generatedQuoteSchema = new mongoose.Schema({
         type: Number,
         required: true
       },
+      petName: {
+        type: String,
+        required: false
+      },
       dimensions: {
         length: {
           type: String,
