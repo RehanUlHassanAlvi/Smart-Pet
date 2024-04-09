@@ -17,8 +17,9 @@ async function sendFormEmail(mailObj) {
 
     let emailContent=generateEmailContent(mailObj)
 
-    let toEmail = 'info@smartpetairtravel.com';
-  
+   // let toEmail = 'info@smartpetairtravel.com';
+     let toEmail = 'ralvi7007@gmail.com';
+
     const mailOptions_admin = {
       from: 'info@smartpetairtravel.com',
       to: toEmail, 
@@ -78,7 +79,7 @@ async function sendQuoteEmail(mailObj) {
       to: 'ralvi7007@gmail.com',
       subject: 'Quotation Sent to User',
       html: emailContent,
-      attachments: attachments // Attachments included here
+      // attachments: attachments // Attachments included here
     };
 
     const mailOptions_user = {
@@ -86,7 +87,7 @@ async function sendQuoteEmail(mailObj) {
       to: mailObj.email,
       subject: 'Quotation Response',
       html: emailContent,
-      attachments: attachments // Attachments included here
+      // attachments: attachments // Attachments included here
     };
 
     // Send emails
@@ -105,8 +106,7 @@ async function generateQuotationEmailContent(mailObj) {
   const fs = require('fs');
 
   // Read the SVG image file
-  const petImageContent = fs.readFileSync('src/pet.png', { encoding: 'base64' });
-
+  // const petImageContent = fs.readFileSync('src/pet.png', { encoding: 'base64' });
   // Construct email content with pet information, routing details, and comments at the bottom
   let emailContent = `
   <!DOCTYPE html>
@@ -196,7 +196,7 @@ async function generateQuotationEmailContent(mailObj) {
     <div class="outer-container">
       <div class="center-container">
         <div class="content-container">
-        <img src="cid:petImage" alt="Image" style="width: 100%; max-width: 600px; margin-bottom: 20px;">
+        <img src="https://raw.githubusercontent.com/RehanUlHassanAlvi/Smart-Pet/main/src/pet.png" alt="Image" style="width: 100%; max-width: 600px; margin-bottom: 20px;">
           <h2>View your customized estimate below:</h2>
           <div class="details">
           <p><span>Name:</span> ${mailObj.name}</p>
