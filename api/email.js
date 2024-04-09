@@ -266,6 +266,7 @@ async function generateQuotationEmailContent(mailObj) {
     `).join('');
   }
   
+}
 
 
 
