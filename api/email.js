@@ -233,7 +233,7 @@ async function generateQuotationEmailContent(mailObj) {
   // Define attachments
   const attachments = [
     {
-      filename: 'pet.svg',
+      filename: 'pet.png',
       content: petImageContent,
       encoding: 'base64',
       cid: 'petImage', // Content ID for referencing in HTML
